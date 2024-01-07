@@ -55,7 +55,7 @@ jobs:
       #
       - name: Build solution
         run: |-
-          dotnet publish applications/clouddemo/netcore/CloudDemo.MvcCore.sln \
+          dotnet publish MyNestApp.MvcCore.sln \
               --configuration Release \
               --framework net6.0
 
@@ -66,10 +66,10 @@ jobs:
         run: echo "IMAGE_TAG=${{ env.REPOSITORY_REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:$GITHUB_SHA" >> $GITHUB_ENV
 
       - name: Lock image version in deployment.yaml
-        run: sed -i 's|CLOUDDEMO_IMAGE|${{ env.IMAGE_TAG }}|g' applications/clouddemo/netcore/deployment.yaml
+        run: sed -i 's|my-nest-app|${{ env.IMAGE_TAG }}|g' deployment.yaml
 
       - name: Build Docker image
-        run: docker build --tag "${{ env.IMAGE_TAG }}" applications/clouddemo/netcore
+        run: docker build --tag "${{ env.IMAGE_TAG }}" .
 
       - name: Publish Docker image to Google Artifact Registry
         run: docker push "${{ env.IMAGE_TAG }}"
@@ -78,5 +78,5 @@ jobs:
       # Deploy to GKE
       #
       - name: Deploy to GKE
-        run: kubectl apply -f applications/clouddemo/netcore/deployment.yaml
+        run: kubectl apply -f deployment.yaml
     
