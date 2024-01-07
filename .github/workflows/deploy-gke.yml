@@ -68,6 +68,9 @@ jobs:
       #
       # Deploy to GKE
       #
+      - name : Print Files
+        run: ls -l
+
       - name: Deploy to GKE
-        run: kubectl apply -f /deployment.yaml
+        run: kubectl apply -f ./deployment.yaml
     
