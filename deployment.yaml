@@ -18,22 +18,6 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: nest-service
-spec:
-  ports:
-    - port: 3000
-      nodePort: 3000
-      targetPort: 3000
-      protocol: TCP
-      name: http
-  selector:
-    app: nest-Pod
-  type: NodePort
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
