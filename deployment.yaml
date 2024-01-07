@@ -26,25 +26,13 @@ metadata:
 spec:
   ports:
     - port: 80
+      nodePort: 31001
       targetPort: 3000
       protocol: TCP
       name: http
   selector:
     app: nest-Pod
   type: NodePort
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: nest-ingress
-spec:
-  defaultBackend:
-    service:
-      name: nest-service
-      port:
-        number: 80
-
 ---
 apiVersion: apps/v1
 kind: Deployment
