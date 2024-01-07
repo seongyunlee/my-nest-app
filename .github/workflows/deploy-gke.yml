@@ -51,15 +51,6 @@ jobs:
           location: ${{ env.CLUSTER_ZONE }}
 
       #
-      # Build the .NET code
-      #
-      - name: Build solution
-        run: |-
-          dotnet publish MyNestApp.MvcCore.sln \
-              --configuration Release \
-              --framework net6.0
-
-      #
       # Build the Docker image and push it to Artifact Registry
       #
       - name: Create image tag
