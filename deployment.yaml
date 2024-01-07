@@ -65,18 +65,6 @@ spec:
           image: NEST_IMAGE
           ports:
             - containerPort: 3000
-          livenessProbe:      # Used by deployment controller
-            httpGet:
-              path: /
-              port: 3000
-            initialDelaySeconds: 5
-            periodSeconds: 5
-          readinessProbe:     # Used by Ingress/GCLB
-            httpGet:
-              path: /
-              port: 3000
-            initialDelaySeconds: 3
-            periodSeconds: 5
           resources:
             limits:
               memory: 1024Mi
