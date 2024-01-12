@@ -15,7 +15,7 @@ env:
   REPOSITORY: clouddemo
   REPOSITORY_REGION: us-central1
 
-  IMAGE: nest-image
+  IMAGE: my-nest-image
 
 jobs:
   build:
@@ -31,6 +31,21 @@ jobs:
       #
       # Authenticate to Google Cloud using workload identity federation
       #
+
+      - name: Create image tag
+        run: echo "IMAGE_TAG=${{ env.REPOSITORY_REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:$GITHUB_SHA" >> $GITHUB_ENV
+
+      - name: Print image tag
+        run: echo ${{ env.IMAGE_TAG }}
+
+      - name: Lock image version in deployment.yaml
+        run: sed -i 's|NEST_IMAGE|${{ env.IMAGE_TAG }}|g' ./deployment.yaml
+
+      - name: Build Docker image
+        run: docker build --tag "${{ env.IMAGE_TAG }}" .
+
+      - name: Publish Docker image to Google Artifact Registry
+        run: docker push "${{ env.IMAGE_TAG }}"
       - id: 'auth'
         name: 'Obtain access token by using workload identity federation'
         uses: 'google-github-actions/auth@v0'
@@ -59,4 +74,7 @@ jobs:
 
       - name: Publish Docker image to Google Artifact Registry
         run: docker push "${{ env.IMAGE }}"
+
+      - name: Print image list
+        run: curl https://${{ env.REPOSITORY_REGION }}-docker.pkg.dev/v2/_catalog
     
