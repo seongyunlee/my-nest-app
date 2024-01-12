@@ -67,13 +67,4 @@ jobs:
 
       - name: Publish Docker image to Google Artifact Registry
         run: docker push "${{ env.IMAGE_TAG }}"
-
-      #
-      # Deploy to GKE
-      #
-      - name : Print Files
-        run: cat ./deployment.yaml
-
-      - name: Deploy to GKE
-        run: kubectl apply -f ./deployment.yaml
     
