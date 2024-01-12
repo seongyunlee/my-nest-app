@@ -83,10 +83,16 @@ jobs:
           token: ${{ secrets.git }}
           path:  helm-guestbook
           fetch-depth: 1
+      
+      - name: check repo
+        run: |
+          echo $GITHUB_SHA
+          git branch
+          ls -al
 
       - name: update manifest file image tag
         run: |
-          yq e -i '.image.tag |= "${{ env.IMAGE_TAG }}"' 'helm-guestbook/values.yaml'
+          yq e -i '.image.tag |= "${{ GITHUB_SHA}}"' 'helm-guestbook/values.yaml'
 
       - name: setup Repository
         working-directory: manifest-repo
