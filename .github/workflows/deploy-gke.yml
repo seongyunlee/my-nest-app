@@ -53,7 +53,7 @@ jobs:
       # Build the Docker image and push it to Artifact Registry
       #
       - name: Create image tag
-        run: echo "IMAGE_TAG=${{ env.REPOSITORY_REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:$GITHUB_SHA" >> $GITHUB_ENV
+        run: echo "IMAGE_TAG=$GITHUB_SHA" >> $GITHUB_ENV
 
       - name: Print image tag
         run: echo ${{ env.IMAGE_TAG }}
@@ -75,3 +75,35 @@ jobs:
 
       - name: Deploy to GKE
         run: kubectl apply -f ./deployment.yaml
+
+      - name: fetch manifest repository
+        uses: actions/checkout@v3
+        with:
+          repository: seongyunlee/argocd-example-apps
+          token: ${{ secret.git }}
+          path:  helm-guestbook
+          fetch-depth: 1
+
+      - name: update manifest file image tag
+        run: |
+          yq e -i '.image.tag |= "${{ env.IMAGE_TAG }}"' 'helm-guestbook/values.yaml'
+
+      - name: setup Repository
+        working-directory: manifest-repo
+        run: |
+          git fetch origin master
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url --push origin https://github.com/***/manifest-repo.git
+          git checkout -b release-${{ github.sha }}
+
+      - name: commit
+        working-directory: manifest-repo
+        run: |
+          git add .
+          git commit -m "Release bff-admin"
+          git push origin HEAD
+      - name: create PR
+        working-directory: manifest-repo
+        run: |
+          gh pr create -B master -H release-${{ github.sha }} -t "deploy-${{ github.sha }}" -b ""
