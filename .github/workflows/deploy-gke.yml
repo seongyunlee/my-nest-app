@@ -84,13 +84,9 @@ jobs:
           path:  argoRepo
           fetch-depth: 1
       
-      - name: check repo
-        run: |
-          cd ./argoRepo
-          ls -al
-
       - name: update manifest file image tag
         run: |
+          cd ./argoRepo
           yq e -i '.image.tag |= "$GITHUB_SHA"' './helm-guestbook/values.yaml'
 
       - name: setup Repository
