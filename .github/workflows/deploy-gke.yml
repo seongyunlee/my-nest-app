@@ -86,7 +86,7 @@ jobs:
       
       - name: update manifest file image tag
         run: |
-          ech
+          echo github sha: $GITHUB_SHA
           cd ./argoRepo
           yq e -i '.image.tag |= ${{env.GITHUB_SHA}}' './helm-guestbook/values.yaml'
 
