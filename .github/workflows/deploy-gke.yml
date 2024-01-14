@@ -81,19 +81,16 @@ jobs:
         with:
           repository: seongyunlee/argocd-example-apps
           token: ${{ secrets.git }}
-          path:  helm-guestbook
+          path:  argoRepo
           fetch-depth: 1
       
       - name: check repo
         run: |
-          echo $GITHUB_SHA
-          git branch
+          cd ./argoRepo
           ls -al
-          ls -al ./helm-guestbook
 
       - name: update manifest file image tag
         run: |
-          stat ./helm-guestbook/values.yaml
           yq e -i '.image.tag |= "$GITHUB_SHA"' './helm-guestbook/values.yaml'
 
       - name: setup Repository
