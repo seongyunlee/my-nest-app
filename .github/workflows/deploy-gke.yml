@@ -95,16 +95,11 @@ jobs:
           git fetch origin master
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url --push origin https://github.com/***/manifest-repo.git
-          git checkout -b release-${{ github.sha }}
+          git remote set-url --push origin https://github.com/seongyunlee/argocd-example-apps.git
 
       - name: commit
         working-directory: manifest-repo
         run: |
           git add .
           git commit -m "Release bff-admin"
-          git push origin HEAD
-      - name: create PR
-        working-directory: manifest-repo
-        run: |
-          gh pr create -B master -H release-${{ github.sha }} -t "deploy-${{ github.sha }}" -b ""
+          git push origin master
