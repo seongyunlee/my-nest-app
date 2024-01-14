@@ -89,8 +89,7 @@ jobs:
           echo $GITHUB_SHA
           git branch
           ls -al
-          stat ./helm-guestbook
-          stat ./helm-guestbook/values.yaml
+          ls -al ./helm-guestbook
 
       - name: update manifest file image tag
         run: |
