@@ -87,7 +87,7 @@ jobs:
       - name: update manifest file image tag
         run: |
           cd ./argoRepo
-          yq e -i '.image.tag |= "$GITHUB_SHA"' './helm-guestbook/values.yaml'
+          yq e -i '.image.tag |= $GITHUB_SHA' './helm-guestbook/values.yaml'
 
       - name: setup Repository
         working-directory: argoRepo
